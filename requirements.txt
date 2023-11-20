@@ -1,0 +1,4 @@
+acryl-datahub[airflow]
+airflow-clickhouse-plugin
+pika
+pytest-playwright
