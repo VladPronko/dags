@@ -217,7 +217,7 @@ docker-compose up
 ```
 
 
-### Разворачиваем AirFlow локально на LocalExecutor для запуска дагов:
+### Разворачиваем AirFlow локально на SequentialExecutor для запуска дагов:
 - Клонируйте проект на свой компьютер:
 ```
 git clone https://github.com/VladPronko/dags.git
