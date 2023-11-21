@@ -6,7 +6,13 @@ git clone https://github.com/VladPronko/dags.git
 
 - Создайте файл `variables` и добавьте в него переменные окружения для работы с дагами. Позже вы сможете импортировать их из данного файла с помощью вэб-интерфейса
 
-- Добавьте необходимые зависимости в файл `requirements.txt`
+- Добавьте необходимые зависимости в файл `requirements.txt`:
+```
+acryl-datahub[airflow]
+airflow-clickhouse-plugin
+pika
+pytest-playwright
+```
 
 - Создайте файл `Dockerfile` и укажите в нем:
 ```dockerfile
