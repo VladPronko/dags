@@ -1,4 +1,4 @@
-### Разворачиваем Apache AirFlow в докере на LocalExecutor для запуска дагов:
+### Разворачиваем AirFlow в докере на LocalExecutor для запуска дагов:
 - Клонируйте проект на свой компьютер:
 ```
 git clone https://github.com/VladPronko/dags.git
@@ -217,7 +217,7 @@ docker-compose up
 ```
 
 
-### Разворачиваем Apache AirFlow локально на LocalExecutor для запуска дагов:
+### Разворачиваем AirFlow локально на LocalExecutor для запуска дагов:
 - Клонируйте проект на свой компьютер:
 ```
 git clone https://github.com/VladPronko/dags.git
@@ -308,6 +308,7 @@ docker-compose up -d
 airflow standalone
 ```
 Идем в веб-интерфейс и создаем коннект к postgres-БД в докере:
+
 ![image](https://github.com/VladPronko/dags/assets/88838807/9c8f273d-ecbb-43eb-a43a-bd1fb20e390a)
 ![image](https://github.com/VladPronko/dags/assets/88838807/6d67173f-f343-4003-b78b-f9778122863b)
 
