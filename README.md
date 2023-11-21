@@ -1,6 +1,6 @@
 ### Разворачиваем Apache AirFlow в докере на LocalExecutor для запуска дагов:
 - Клонируйте проект на свой компьютер:
-```bash
+```
 git clone https://github.com/VladPronko/dags.git
 ```
 
@@ -9,18 +9,18 @@ git clone https://github.com/VladPronko/dags.git
 - Добавьте необходимые зависимости в файл `requirements.txt`
 
 - Создайте файл `Dockerfile` и укажите в нем:
-```docker
+```dockerfile
 FROM apache/airflow:2.7.3
 COPY requirements.txt requirements.txt
 RUN pip install --upgrade pip -r requirements.txt
 ```
 
 - Запускаем сборку базового докер-образ с нашими зависимостями:
-```docker
+```
 docker build -t airflow_with_requirements .
 ```
 - Создайте файл `docker-compose.yaml` и укажите в нем:
-```docker
+```dockerfile
 version: '3.8'
 x-airflow-common:
   &airflow-common
@@ -206,6 +206,6 @@ volumes:
 ```
 
 - Запускаем airflow:
-```docker
+```
 docker-compose up
 ```
