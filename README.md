@@ -215,3 +215,103 @@ volumes:
 ```
 docker-compose up
 ```
+
+
+### Разворачиваем Apache AirFlow локально на LocalExecutor для запуска дагов:
+- Клонируйте проект на свой компьютер:
+```
+git clone https://github.com/VladPronko/dags.git
+```
+
+- Создайте файл `variables` и добавьте в него переменные окружения для работы с дагами. Позже вы сможете импортировать их из данного файла с помощью вэб-интерфейса
+
+- Добавьте необходимые зависимости в файл `requirements.txt`:
+```
+acryl-datahub[airflow]
+airflow-clickhouse-plugin
+pika
+pytest-playwright
+pandas
+apache-airflow-providers-postgres
+```
+- Создайте и активируйте виртуальное окружение:
+```python
+python3 -m venv venv
+source venv/bin/activate
+```
+- Устанавливаем зависимости из файла requirements.txt:
+```python
+pip install --upgrade pip -r requirements.txt
+```
+- Укажим текущую директорию как основную для нашего airflow:
+```bash
+export AIRFLOW_HOME=`pwd`
+```
+- Устанавливаем airflow (выполняем построчно команды):
+```bash
+AIRFLOW_VERSION=2.7.3
+PYTHON_VERSION="$(python --version | cut -d " " -f 2 | cut -d "." -f 1-2)"
+CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt"
+# For example this would install 2.7.3 with python 3.8: https://raw.githubusercontent.com/apache/airflow/constraints-2.7.3/constraints-3.8.txt
+pip install "apache-airflow==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
+```
+- Пробуем запустить airflow:
+```python
+airflow standalone
+```
+- После пробного запуска у нас в папке появился файл airflow.cfg. Заходим в него и исправляем параметры:
+```
+load_examples = False
+load_default_connections = False
+test_connection = Enabled
+```
+- Сбрасываем параметры БД:
+```python
+airflow db reset
+```
+- Загружаем переменные окружения через веб-интерфейс:
+![image](https://github.com/VladPronko/dags/assets/88838807/59f29a50-7563-4c91-b774-844f1ea523e3)
+![image](https://github.com/VladPronko/dags/assets/88838807/8e1d381a-c7c2-40ab-919d-539d223f73e7)
+![image](https://github.com/VladPronko/dags/assets/88838807/f4fccd01-ccf5-4738-8471-74a3cb264cf9)
+
+- Создаем файл docker-compose.yaml с параметрами postgres-БД для выполнения дагов:
+```dockerfile
+version: '3.8'
+services:
+  db:
+    container_name: postgres-test
+    image: postgres:14.5-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB-test_db}
+      POSTGRES_USER: ${POSTGRES_USER-test_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD-qwerty123}
+    ports:
+      - 5432:5432
+  admin:
+    image: adminer
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - 8888:8080
+volumes:
+  db_data:
+```
+- Запускаем docker-compose файл с БД:
+```python
+docker-compose up -d
+```
+- Запускаем airflow:
+```python
+airflow standalone
+```
+Идем в веб-интерфейс и создаем коннект к postgres-БД в докере:
+![image](https://github.com/VladPronko/dags/assets/88838807/9c8f273d-ecbb-43eb-a43a-bd1fb20e390a)
+![image](https://github.com/VladPronko/dags/assets/88838807/6d67173f-f343-4003-b78b-f9778122863b)
+
+- Перезапускаем airflow и пользуемся:
+```python
+airflow standalone
+```
